@@ -1,4 +1,79 @@
-Öğrenci No:
-AD-SOYAD:
-
+Öğrenci No:250541048
+AD-SOYAD: Amine Ceren Yiğit
+Bulaşıkları en iyi şekilde yıkama algoritması
 Lütfen seçtiğiniz algoritmaya ait çözümü ve diğer isterleri aşağıya ekleyiniz:
+// Girdi: Kirli Bulaşık Yığını (Yığın)
+// Çıktı: Temiz ve Kurutulmuş Bulaşıklar
+Fonksiyon MAKSİMUM_VERİM_İLE_YIKA(Yığın):
+
+// ------------------------------------
+// I. HAZIRLIK AŞAMASI (Ön İşlemler)
+// ------------------------------------
+
+Miktar = Yığın.boyut
+
+// A. KOŞUL: Kirli Bulaşık Var mı? (Temel Durum)
+Eğer Miktar == 0 ise:
+Dön "Bulaşık Yok. Görev Tamamlandı."
+
+// B. Sıcaklık ve Malzeme Kontrolü
+Suyun_Sıcaklığı = Su_Sıcaklığını_Ayarla("İdeal_Sıcak") // Genellikle 45-60°C arası
+Bulaşık_Süngeri = Sünger.Temiz_ve_Etkili_mi()
+Deterjan = Deterjan_Miktarını_Ölç(Miktar)
+
+// C. Kazıma İşlemi (En büyük verimlilik adımı)
+// Tekrar Eden İşlem: Her bulaşığı kazı
+Her Bulaşık için Yığın'da:
+Eğer Bulaşık.Üzerinde_Büyük_Atık_Var_mı() ise:
+Yap Aksiyon("Atığı_Çöpe_Kazı") // Gider tıkanıklığını ve su kirliliğini engelle
+
+// D. Sınıflandırma
+Bulaşıkları_Sınıflandır(Yığın) // Örn: Bardaklar, Çatallar, Tencereler (Az kirliden çok kirliye doğru)
+
+// ------------------------------------
+// II. YIKAMA DÖNGÜSÜ (Tekrarlı İşlem)
+// ------------------------------------
+
+Sıralı_Bölümler = ["Bardaklar", "Çatallar_Kaşıklar", "Tabaklar", "Tencereler_Tavalar"]
+
+// Ana Tekrar Eden İşlem: Sınıflandırılmış her bölümü sırayla yıka
+Her Bölüm için Sıralı_Bölümler'de:
+
+// A. Yıkama Koşulu
+Eğer Bölüm.Bulaşık_Var_mı() ise:
+  
+  // B. Bölüm İçi Tekrarlı Yıkama
+  Her Bulaşık için Bölüm'de:
+    Kir_Derecesi = Bulaşık.Kir_Derecesini_Ölç()
+    
+    // C. Koşul: Kir derecesine göre yıkama stratejisi
+    Eğer Kir_Derecesi == "Hafif" ise:
+      Yap Aksiyon("Hızlıca_Süngere_Tut")
+    Başka Eğer Kir_Derecesi == "Orta" ise:
+      Yap Aksiyon("Deterjanlı_Süngeri_Uygula")
+    Başka: // Kir_Derecesi == "Yoğun" (Yanmış, kurumuş)
+      Yap Aksiyon("Ön_Islatma_ve_Fırçalama_Uygula") 
+      
+  // D. Durulama Döngüsü
+  // Tekrar Eden İşlem: Deterjan tamamen gidene kadar durula
+  Her Bulaşık için Bölüm'de:
+    Tekrarla:
+      Yap Aksiyon("Temiz_Sıcak_Suyla_Durula")
+      Eğer Bulaşık.Deterjan_Kalıntısı_Kaldı_mı() == YANLIŞ ise:
+        Döngüden Çık
+// ------------------------------------
+// III. TAMAMLAMA AŞAMASI
+// ------------------------------------
+
+// A. Yerleştirme ve Kurutma Koşulu
+Eğer Yıkama_Alanı.Doldu_mu() ise:
+Yap Aksiyon("Tüm_Bulaşıkları_Kurutma_Raftına_Yerleştir")
+
+// B. Kurutma
+Yap Aksiyon("Hava_ile_Doğal_Kurutma_veya_Bez_ile_Kurutma")
+
+// C. Hijyen Kontrolü
+Eğer Bulaşık_Süngeri.Çok_Kullanıldı_mı() ise:
+Yap Aksiyon("Süngeri_Değiştir_veya_Dezenfekte_Et")
+
+Dön "Yıkama işlemi başarılı. Mutfak hazır."
