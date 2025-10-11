@@ -1,4 +1,64 @@
-Öğrenci No:
-AD-SOYAD:
-
+Öğrenci No: 250541048
+AD-SOYAD: Amine Ceren Yiğit
+Favori oyununda yüksek skor alma algoritması
 Lütfen seçtiğiniz algoritmaya ait çözümü ve diğer isterleri aşağıya ekleyiniz:
+// 1. Durumu Gözlemle
+MevcutKonum = Oyun_Durumu.Konum
+YakınTehlike = Oyun_Durumu.EnYakınTehlikeyi_Bul()
+YakınÖdül = Oyun_Durumu.EnYakınÖdülü_Bul()
+PowerUpSüresi = Oyun_Durumu.AktifPowerUpSüresi
+
+// 2. Aksiyonu Belirle (Karar Verme Süreci)
+
+// -------------------
+// A. KOŞULLU DURUM 1: HAYATTA KALMA ÖNCELİĞİ (En Önemli Koşul)
+// -------------------
+Eğer YakınTehlike.Mesafe < 5 AND CanSayısı > 0 ise:
+  // Tehlike çok yakınsa, hayatta kalma mekanizmasını çalıştır
+  Eğer YakınTehlike.Türü == "Engel" ise:
+    Yap Aksiyon("Zıpla")
+  Başka Eğer YakınTehlike.Türü == "Düşman" ise:
+    Yap Aksiyon("Saldır")
+  Başka:
+    Yap Aksiyon("Kaç")
+    
+  // Gözlemlenen tehlike nedeniyle skor potansiyeli düşebilir.
+  Git Sonraki_Aşama
+  
+// -------------------
+// B. KOŞULLU DURUM 2: SKOR MAKSİMİZASYONU
+// -------------------
+Başka Eğer YakınÖdül.Mesafe < 10 ise:
+  // Ödül yakındaysa ve can durumu kritik değilse
+  Eğer YakınÖdül.Türü == "Büyük Puan" ise:
+    Yap Aksiyon("Ödüle_Git")
+    MevcutSkor = MevcutSkor + YakınÖdül.Değer 
+  Başka Eğer YakınÖdül.Türü == "PowerUp" AND PowerUpSüresi == 0 ise:
+    Yap Aksiyon("PowerUp_Al") // Power-up yoksa al
+  Başka:
+    Yap Aksiyon("Minimum_Puanı_Topla") // Normal puanları topla
+  
+  Güncelle MaksimumSkor'u (MaksimumSkor, MevcutSkor'un en büyüğü olarak)
+
+// -------------------
+// C. KOŞULLU DURUM 3: HEDEF KONTROLÜ
+// -------------------
+Başka Eğer MevcutSkor >= HedefSkor AND CanSayısı > 1 ise:
+  // Hedef skora ulaşıldıysa, daha az riskli oyna
+  Yap Aksiyon("Defansif_Hareket_Et")
+
+// -------------------
+// D. VAKUMLU DURUM (Varsayılan Aksiyon)
+// -------------------
+Başka:
+  // Yapılacak kritik bir şey yoksa, temel oyunu oyna (ilerle, bekle, vb.)
+  Yap Aksiyon("İlerle")
+
+
+// 3. Sonraki Aşamaya Hazırlan
+Etiket Sonraki_Aşama:
+Oyun_Durumu = Oyun_Durumu.Bir_Sonraki_Kareyi_Oyna()
+
+// 4. Kayıp Kontrolü
+Eğer Oyun_Durumu.OyunBitti() ise:
+  Döngüden Çık
