@@ -1,4 +1,90 @@
-Öğrenci No:
-AD-SOYAD:
-
+Öğrenci No: 250541048
+AD-SOYAD: Amine Ceren Yiğit
+Tic-Tac-Toe’da kazanma stratejisi algoritması
 Lütfen seçtiğiniz algoritmaya ait çözümü ve diğer isterleri aşağıya ekleyiniz:
+// Girdi: Mevcut Oyun Tahtası (Tahta)
+// Çıktı: Yapılacak En İyi Hamlenin Koordinatları (Satır, Sütun)
+Fonksiyon EN_İYİ_HAMLEYİ_BUL(Tahta):
+
+// ------------------------------------
+// I. TEKRAR EDEN İŞLEM: TÜM BOŞ HÜCRELERİ KONTROL ET
+// ------------------------------------
+
+// Olası hamleler listesini oluştur
+BoşHücreler = Tahta.Tüm_Boş_Hücreleri_Bul()
+
+// ------------------------------------
+// II. KOŞULLU DURUMLAR: ÖNCELİK SIRASINDA KARAR VERME
+// ------------------------------------
+
+// A. ÖNCELİK 1: KAZANMA HAMLESİ (En Yüksek Öncelik)
+// Kendiniz (PC) için bir sonraki hamlede kazanmayı kontrol edin.
+
+Her Hamle için BoşHücreler'de:
+Tahta.Hamle_Yap(Hamle, PC_Sembolü) // Geçici olarak hamleyi yap
+Eğer Tahta.Kazanma_Durumu_Var_mı(PC_Sembolü) ise:
+Tahta.Hamleyi_Geri_Al(Hamle)
+Dön Hamle // Hamleyi bulduk, hemen yap
+Tahta.Hamleyi_Geri_Al(Hamle)
+
+// B. ÖNCELİK 2: RAKİBİ ENGELLEME (Savunma Önceliği)
+// Rakibin (Kullanıcı) bir sonraki hamlede kazanmasını engelleyin.
+
+Her Hamle için BoşHücreler'de:
+Tahta.Hamle_Yap(Hamle, Rakip_Sembolü) // Geçici olarak rakip adına hamleyi yap
+Eğer Tahta.Kazanma_Durumu_Var_mı(Rakip_Sembolü) ise:
+Tahta.Hamleyi_Geri_Al(Hamle)
+Dön Hamle // Rakibin kazanmasını engelle, hemen yap
+Tahta.Hamleyi_Geri_Al(Hamle)
+
+// C. ÖNCELİK 3: ÇATAL OLUŞTURMA (Hücum Önceliği)
+// İki farklı hatta aynı anda kazanma tehdidi oluşturarak rakibi çaresiz bırakın.
+
+Her Hamle için BoşHücreler'de:
+Tahta.Hamle_Yap(Hamle, PC_Sembolü)
+Eğer Tahta.Çatal_Durumu_Oluştu_mu(PC_Sembolü) ise:
+Tahta.Hamleyi_Geri_Al(Hamle)
+Dön Hamle
+Tahta.Hamleyi_Geri_Al(Hamle)
+
+// D. ÖNCELİK 4: RAKİP ÇATALI ENGELLEME (Yüksek Savunma)
+// Eğer rakip bir sonraki hamlede çatal oluşturabiliyorsa bunu engelle.
+
+Her Hamle için BoşHücreler'de:
+Tahta.Hamle_Yap(Hamle, Rakip_Sembolü)
+Eğer Tahta.Çatal_Durumu_Oluştu_mu(Rakip_Sembolü) ise:
+Tahta.Hamleyi_Geri_Al(Hamle)
+// NOT: Çatalı engellemek için bazen rastgele bir hamle yapmak gerekebilir.
+// Basitlik için, ilk engelleme hamlesini dönüyoruz.
+Dön Hamle
+Tahta.Hamleyi_Geri_Al(Hamle)
+
+// E. ÖNCELİK 5: MERKEZİ ALMA
+// Oyunun en güçlü konumu olan merkezi (2, 2) kontrol et.
+
+Eğer (2, 2) BoşHücreler'de ise:
+Dön (2, 2)
+
+// F. ÖNCELİK 6: KARŞI KÖŞELERİ KULLANMA
+// Eğer rakip bir köşeyi tutuyorsa, hemen karşı köşeyi al.
+
+Eğer Tahta.Köşeleri_Doldurma_Gereği_Var_mı() ise:
+Dön Tahta.Uygun_Karşı_Köşeyi_Bul()
+
+// G. ÖNCELİK 7: BOŞ KÖŞELERİ ALMA
+// Henüz alınmamış köşeler varsa, köşeler merkeze yakın en değerli yerlerdir.
+
+Eğer Tahta.Boş_Köşe_Var_mı() ise:
+Dön Tahta.Rastgele_Boş_Köşeyi_Bul()
+
+// H. ÖNCELİK 8: BOŞ KENARLARI ALMA (En Düşük Öncelik)
+// Yukarıdaki tüm koşullar sağlanmazsa, herhangi bir kenarı al.
+
+Eğer Tahta.Boş_Kenar_Var_mı() ise:
+Dön Tahta.Rastgele_Boş_Kenarı_Bul()
+
+// ------------------------------------
+// III. SONUÇ (Oyun berabere bitmiştir)
+// ------------------------------------
+
+Dön Hiçbir_Hamle // Tahta doludur, oyun berabere bitti
