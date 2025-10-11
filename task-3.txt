@@ -1,4 +1,45 @@
-Öğrenci No:
-AD-SOYAD:
-
+Öğrenci No: 250541048
+AD-SOYAD: Amine Ceren Yiğit
+Telefon rehberini alfabetik düzenleme algoritması
 Lütfen seçtiğiniz algoritmaya ait çözümü ve diğer isterleri aşağıya ekleyiniz:
+// Girdi: Rehber (Kişi nesnelerinden oluşan liste, her Kişi'nin bir Adı var)
+// Çıktı: Alfabetik olarak sıralanmış Rehber
+Fonksiyon REHBER_SIRALA(Rehber):
+
+N = Rehber.uzunluk
+Değişiklik_Yapıldı = YANLIŞ // Kontrol mekanizması: Hiç yer değiştirme yapılmazsa liste sıralanmıştır
+
+// ------------------------------------
+// A. TEKRAR EDEN İŞLEM (Dış Döngü)
+// ------------------------------------
+// Döngü, Rehber tamamen sıralanana kadar devam eder
+Tekrarla:
+Değişiklik_Yapıldı = YANLIŞ // Yeni bir geçişe başla
+
+// ------------------------------------
+// B. TEKRAR EDEN İŞLEM (İç Döngü)
+// ------------------------------------
+// Listenin tamamı üzerinde gezin (N-1'e kadar çünkü sonuncuyla karşılaştırılır)
+i = 0'dan N-2'ye Kadar Tekrarla:
+  
+  Kişi_A = Rehber[i]
+  Kişi_B = Rehber[i+1]
+  
+  // ------------------------------------
+  // C. KOŞULLU DURUM (Karşılaştırma ve Yer Değiştirme)
+  // ------------------------------------
+  // Koşul: Eğer Kişi A'nın adı, Kişi B'nin adından alfabetik olarak SONRA geliyorsa
+  Eğer Kişi_A.Ad > Kişi_B.Ad ise: 
+    
+    // Yanlış sıradalar, yer değiştirme yap
+    Rehber[i] = Kişi_B
+    Rehber[i+1] = Kişi_A
+    
+    Değişiklik_Yapıldı = DOĞRU // Yer değiştirme yapıldı
+    
+// ------------------------------------
+// D. DÖNGÜ SONLANDIRMA KOŞULU
+// ------------------------------------
+// Eğer iç döngüde hiç yer değiştirme yapılmadıysa, liste sıralanmıştır
+Eğer Değişiklik_Yapıldı == YANLIŞ ise:
+  Döngüden Çık
