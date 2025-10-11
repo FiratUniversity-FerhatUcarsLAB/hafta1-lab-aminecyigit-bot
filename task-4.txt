@@ -1,4 +1,97 @@
-Öğrenci No:
-AD-SOYAD:
-
+Öğrenci No: 250541048
+AD-SOYAD: Amine Ceren Yiğit
+N kişi için adil pasta paylaşımı algoritması
 Lütfen seçtiğiniz algoritmaya ait çözümü ve diğer isterleri aşağıya ekleyiniz:
+// Girdi: Mevcut Oyun Tahtası (3x3 bir matris, Tahta)
+// Çıktı: Yapılacak En İyi Hamlenin Koordinatları (Satır, Sütun)
+Fonksiyon EN_İYİ_HAMLEYİ_BELİRLE(Tahta):
+
+// PC_Sembolü: Bilgisayarın (X veya O) sembolü
+// Rakip_Sembolü: Oyuncunun (X veya O) sembolü
+
+// ------------------------------------
+// I. TEKRAR EDEN İŞLEM (Tahtayı Hazırlama)
+// ------------------------------------
+
+// Tüm boş hücrelerin listesini al. Bu, potansiyel hamle havuzudur.
+BoşHücreler = Tahta.Tüm_Boş_Hücreleri_Bul()
+
+// ------------------------------------
+// II. KOŞULLU DURUMLAR: ÖNCELİK SIRASINDA KARAR VERME
+// ------------------------------------
+
+// A. ÖNCELİK 1: KAZANMA HAMLESİ (Hücum)
+// Kural: Kendi sembolünüzle hemen kazanma fırsatınız var mı?
+
+// Tekrar Eden İşlem: Her boş hücreyi dene
+Her Hamle için BoşHücreler'de:
+Tahta.Hamle_Yap(Hamle, PC_Sembolü) // Geçici olarak dene
+Eğer Tahta.Kazanma_Durumu_Var_mı(PC_Sembolü) ise:
+Tahta.Hamleyi_Geri_Al(Hamle)
+Dön Hamle // Hemen kazan!
+Tahta.Hamleyi_Geri_Al(Hamle)
+
+// B. ÖNCELİK 2: RAKİBİ ENGELLEME HAMLESİ (Savunma)
+// Kural: Rakibin bir sonraki hamlede kazanmasını engelleyin.
+
+// Tekrar Eden İşlem: Her boş hücreyi dene
+Her Hamle için BoşHücreler'de:
+Tahta.Hamle_Yap(Hamle, Rakip_Sembolü) // Geçici olarak rakip adına dene
+Eğer Tahta.Kazanma_Durumu_Var_mı(Rakip_Sembolü) ise:
+Tahta.Hamleyi_Geri_Al(Hamle)
+Dön Hamle // Rakibin kazanmasını engelle!
+Tahta.Hamleyi_Geri_Al(Hamle)
+
+// C. ÖNCELİK 3: ÇATAL OLUŞTURMA HAMLESİ (Yüksek Hücum)
+// Kural: İki farklı kazanma tehdidi (çatal) oluşturarak rakibi çaresiz bırakın.
+
+// Tekrar Eden İşlem: Her boş hücreyi dene
+Her Hamle için BoşHücreler'de:
+Tahta.Hamle_Yap(Hamle, PC_Sembolü)
+Eğer Tahta.Çatal_Durumu_Oluştu_mu(PC_Sembolü) ise:
+Tahta.Hamleyi_Geri_Al(Hamle)
+Dön Hamle
+Tahta.Hamleyi_Geri_Al(Hamle)
+
+// D. ÖNCELİK 4: RAKİP ÇATALI ENGELLEME HAMLESİ (Yüksek Savunma)
+// Kural: Rakibin çatal oluşturmasını engelleyin.
+
+// Not: Rakibin çatalını engellemek, birden fazla adımı gerektirebilir.
+// Basitlik için, ilk engelleyici hamleyi seçiyoruz.
+
+Her Hamle için BoşHücreler'de:
+Tahta.Hamle_Yap(Hamle, Rakip_Sembolü)
+Eğer Tahta.Çatal_Durumu_Oluştu_mu(Rakip_Sembolü) ise:
+Tahta.Hamleyi_Geri_Al(Hamle)
+Dön Hamle
+Tahta.Hamleyi_Geri_Al(Hamle)
+
+// E. ÖNCELİK 5: MERKEZİ ALMA (Konumsal Üstünlük)
+// Kural: Merkez (2, 2) boşsa, orayı alın.
+
+Eğer (2, 2) BoşHücreler'de ise:
+Dön (2, 2)
+
+// F. ÖNCELİK 6: KARŞI KÖŞEYİ ALMA (Savunma ve Hücum)
+// Kural: Rakip bir köşeyi tutuyorsa, hemen karşı köşeyi alın. (Örn: Rakip (1,1)'de ise (3,3)'ü al)
+
+Eğer Tahta.Rakibin_Köşesine_Karşı_Köşe_Alınmalı_mı() ise:
+Dön Tahta.Uygun_Karşı_Köşeyi_Bul()
+
+// G. ÖNCELİK 7: BOŞ KÖŞELERİ ALMA (Konumsal)
+// Kural: Boşta köşe varsa (1,1), (1,3), (3,1), (3,3) birini alın.
+
+Eğer Tahta.Boş_Köşe_Var_mı() ise:
+Dön Tahta.Rastgele_Boş_Köşeyi_Bul()
+
+// H. ÖNCELİK 8: BOŞ KENARLARI ALMA (Son Çare)
+// Kural: Yukarıdakilerin hiçbiri yapılamıyorsa, boş bir kenarı alın.
+
+Eğer Tahta.Boş_Kenar_Var_mı() ise:
+Dön Tahta.Rastgele_Boş_Kenarı_Bul()
+
+// ------------------------------------
+// III. SONUÇ
+// ------------------------------------
+
+Dön Hiçbir_Hamle // Tahta dolu, oyun berabere bitti
